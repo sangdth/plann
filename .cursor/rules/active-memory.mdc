@@ -1,0 +1,132 @@
+---
+alwaysApply: true
+---
+
+# Active Memory Rule
+
+## Purpose
+
+Maintain current session context and work-in-progress state. This system tracks **what you're doing now** and **what's next**, not historical records (see [@archive-memory.mdc](mdc:.cursor/rules/archive-memory.mdc) for history).
+
+## Memory Location
+
+All active memory files are stored in `.cursor/memory/`
+
+## Core Files
+
+### 1. Active Context (`.cursor/memory/active-context.md`)
+
+Current session state and immediate work focus.
+
+**Contains:**
+
+- What you're working on right now
+- Recent changes in this session
+- Current blockers or issues
+- Next immediate steps (1-3 actions)
+
+**Update when:**
+
+- Starting a new work session
+- Switching between tasks
+- Hitting a blocker
+- Ending a session
+
+### 2. Requirements (`.cursor/memory/requirements.md`)
+
+Living document of system goals and boundaries.
+
+**Contains:**
+
+- Why this system exists
+- Core functional requirements
+- Current scope boundaries
+- Key non-functional requirements
+
+**Update when:**
+
+- Requirements change or clarify
+- Scope adjustments occur
+- New constraints emerge
+
+### 3. Architecture (`.cursor/memory/architecture.md`)
+
+Current system design and technical decisions.
+
+**Contains:**
+
+- Active system components and relationships
+- Technology stack and key dependencies
+- Current technical constraints
+- Design patterns in use
+
+**Update when:**
+
+- Architecture changes
+- New dependencies added
+- Technical decisions made
+- Design patterns evolve
+
+### 4. Work Plan (`.cursor/memory/work-plan.md`)
+
+Active task list and status tracking.
+
+**Contains:**
+
+- Tasks currently in progress
+- Tasks ready to start
+- Task dependencies and blockers
+- What's working vs. what needs building
+
+**Update when:**
+
+- Starting new tasks
+- Completing tasks (before archiving)
+- Task status changes
+- Dependencies resolve
+
+## Session Workflow
+
+### Session Start
+
+1. Read `.cursor/memory/active-context.md` first
+2. Check `.cursor/memory/work-plan.md` for current tasks
+3. Verify environment state
+
+### During Session
+
+- Update `active-context.md` as work progresses
+- Document decisions in relevant files
+- Note blockers immediately
+
+### Session End
+
+- Update `active-context.md` with final state
+- List next steps clearly
+- Update `work-plan.md` with task status
+
+## Key Practices
+
+**Document decisions, not just actions.** Capture *why* choices were made.
+
+**Keep it current.** Active memory reflects the present state, not history.
+
+**Link to archives.** Reference completed work from archive logs when relevant.
+
+**Stay minimal.** Only track active work. Move completed/failed tasks to archives (see [@archive-memory.mdc](mdc:.cursor/rules/archive-memory.mdc)).
+
+## Integration with Archives
+
+When tasks complete or fail:
+
+1. Update status in `work-plan.md`
+2. Trigger archival process ([@archive-memory.mdc](mdc:.cursor/rules/archive-memory.mdc) handles this)
+3. Remove from active tracking once archived
+
+When consulting history:
+
+- Reference `.cursor/memory/task-log.md` for completed work
+- Reference `.cursor/memory/plan-log.md` for superseded plans
+- Read archived files for detailed context
+
+**Remember: Active memory is your working state. Archives are your history.**

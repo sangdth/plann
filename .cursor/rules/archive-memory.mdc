@@ -1,0 +1,149 @@
+---
+alwaysApply: true
+---
+
+# Archive Memory Rule
+
+## Purpose
+
+Store historical records of completed, failed, or superseded work. This system provides **project history and past decisions**, not current state (see [@active-memory.mdc](mdc:.cursor/rules/active-memory.mdc) for current work).
+
+## Memory Location
+
+All archives are stored in `.cursor/memory/`
+
+## Archive Structure
+
+### 1. Task Archives (`.cursor/memory/tasks/`)
+
+Full task files with original details.
+
+**Contains:**
+
+- Complete task description, test strategy, error logs
+- Status: `completed` or `failed`
+- Task dependencies and context
+
+**Naming convention:**
+
+- Format: `task{id}_name.md`
+- Example: `task001_auth-system.md`
+
+### 2. Task Log (`.cursor/memory/task-log.md`)
+
+Chronological archive log of all tasks.
+
+**Contains:**
+
+- Append-only record of archived tasks
+- Each entry: ID, title, status, dependencies, description, timestamp
+
+**Entry format:**
+
+```markdown
+- **Task ID:** task{id}
+  - **Title:** {task title}
+  - **Status:** {completed|failed}
+  - **Archived On:** YYYY-MM-DDTHH:MM:SSZ
+  - **Dependencies:** {list or "None"}
+  - **Description:** {brief summary}
+```
+
+### 3. Plan Archives (`.cursor/memory/`)
+
+Full plan files (PRDs, feature specs) with original content preserved.
+
+**Contains:**
+
+- Complete plan as it existed when archived
+- Status: Completed, deprecated, or superseded
+- Original context and decisions
+
+**Naming convention:**
+
+- Format: Original filename preserved
+- Example: `feature-plan.md`
+
+### 4. Plan Log (`.cursor/memory/plan-log.md`)
+
+Chronological archive log matched with plan filenames.
+
+**Contains:**
+
+- Append-only record of archived plans
+- Each entry: Path, timestamp, reason, title, original location
+
+**Entry format:**
+
+```markdown
+- **Archived Plan:** .cursor/memory/{filename}
+  - **Archived On:** YYYY-MM-DDTHH:MM:SSZ
+  - **Reason:** {Completed|Deprecated|Superseded}
+  - **Title:** {plan title}
+  - **Original File:** {original path}
+```
+
+## Archival Workflow
+
+### When to Archive
+
+Archive from active memory when:
+
+- Task in `work-plan.md` reaches `completed` or `failed` status
+- Plan in `.cursor/plans/` becomes deprecated or superseded
+- Feature shipped and stable
+- Design direction changes
+
+### Archiving Tasks
+
+1. Read task details from `work-plan.md`
+2. Move task file to `.cursor/memory/tasks/` using `mv` command (see [@task-management.mdc](mdc:.cursor/rules/task-management.mdc))
+3. Read current `task-log.md` content
+4. Append new task entry to log
+5. Update `work-plan.md` to remove archived task
+
+### Archiving Plans
+
+1. Use `mv` command to move plan file to `.cursor/memory/`
+2. Read current `plan-log.md` content
+3. Append new plan entry to log
+4. Update references in active memory files
+
+### Consulting Archives
+
+1. Start with logs: Read `task-log.md` and `plan-log.md` for overview
+2. Identify relevant items by title, description, or date
+3. Read full archive files for detailed context
+
+## Key Practices
+
+**Check archives before starting new work.** Avoid rebuilding existing solutions or repeating past mistakes.
+
+**Archive completed work promptly.** Keep active memory lean and archives comprehensive.
+
+**Use logs for discovery, files for details.** Start with logs, then read full archive files when needed.
+
+**Preserve file history.** Use `mv` command for plans, never `edit_file` + `delete_file`.
+
+## Integration with Active Memory
+
+Before starting new work:
+
+- Check archives to avoid rebuilding existing solutions
+- Review failed tasks to avoid known pitfalls
+- Understand dependencies from past implementations
+
+After completing work:
+
+1. Update `.cursor/memory/active-context.md` with final status
+2. Archive task to `.cursor/memory/`
+3. Append entry to `.cursor/memory/task-log.md`
+4. Remove from active work plan
+
+When referencing history:
+
+- Link to specific archive entries in active files
+- Note relevant task/plan IDs
+- Cite decisions from archived plans
+
+**Remember: Archives are history. Active memory is living state.**
